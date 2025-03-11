@@ -8,10 +8,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 @MapperScan("com.intelligent.cloud_picture_backend.mapper")
 @EnableAspectJAutoProxy(exposeProxy = true)
-public class YupiPictureBackendApplication {
+public class IntelligentPictureBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(YupiPictureBackendApplication.class, args);
+        SpringApplication.run(IntelligentPictureBackendApplication.class, args);
     }
 
 }

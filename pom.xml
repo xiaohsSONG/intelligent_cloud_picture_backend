@@ -110,7 +110,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.intelligent.cloud_picture_backend.YupiPictureBackendApplication</mainClass>
+                    <mainClass>com.intelligent.cloud_picture_backend.IntelligentPictureBackendApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>
