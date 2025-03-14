@@ -1,11 +1,16 @@
 package com.intelligent.cloud_picture_backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.intelligent.cloud_picture_backend.model.dto.picture.PictureQueryRequest;
 import com.intelligent.cloud_picture_backend.model.dto.picture.PictureUploadRequest;
 import com.intelligent.cloud_picture_backend.model.entity.Picture;
 import com.intelligent.cloud_picture_backend.model.entity.User;
 import com.intelligent.cloud_picture_backend.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author aidishen
@@ -25,5 +30,20 @@ public interface PictureService extends IService<Picture> {
     PictureVO uploadPicture(MultipartFile multipartFile,
                             PictureUploadRequest pictureUploadRequest,
                             User loginUser);
+
+
+    PictureVO getPictureVO(Picture picture, HttpServletRequest request);
+
+    Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
+
+    void validPicture(Picture picture);
+
+    /**
+     * 获取查询对象
+     * @param pictureQueryRequest
+     * @return
+     */
+    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+
 
 }
