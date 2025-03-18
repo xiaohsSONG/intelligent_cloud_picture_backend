@@ -4,10 +4,17 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.http.Method;
 import com.intelligent.cloud_picture_backend.config.CosClientConfig;
 import com.intelligent.cloud_picture_backend.exception.BusinessException;
 import com.intelligent.cloud_picture_backend.exception.ErrorCode;
 import com.intelligent.cloud_picture_backend.exception.ThrowUtils;
+import com.intelligent.cloud_picture_backend.manager.upload.FilePictureUpload;
+import com.intelligent.cloud_picture_backend.manager.upload.UrlPictureUpload;
 import com.intelligent.cloud_picture_backend.model.dto.file.UploadPictureResult;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.PutObjectResult;
@@ -20,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,8 +48,10 @@ public class FileManager {
 
     @Resource
     private COSClient cosClient;
+
     @Autowired
     private CosManager cosManager;
+
 
     /**
      * 上传图片
@@ -104,7 +115,6 @@ public class FileManager {
         final List<String> ALLOW_FORMAT_LIST =  Arrays.asList("jpeg", "jpg", "png", "webp");
         ThrowUtils.throwIf(!ALLOW_FORMAT_LIST.contains(fileSuffix), ErrorCode.PARAMS_ERROR, "文件类型错误");
     }
-
     /**
      * 删除临时文件
      */
@@ -118,5 +128,47 @@ public class FileManager {
             log.error("file delete error, filepath = {}", file.getAbsolutePath());
         }
     }
+
+//    public UploadPictureResult uploadPictureByUrl(String fileUrl, String uploadPathPrefix) {
+//        // 校验图片
+//        // validPicture(multipartFile);
+//        validPicture(fileUrl);
+//        // 图片上传地址
+//        String uuid = RandomUtil.randomString(16);
+//        // String originFilename = multipartFile.getOriginalFilename();
+//        String originFilename = FileUtil.mainName(fileUrl);
+//        String uploadFilename = String.format("%s_%s.%s", DateUtil.formatDate(new Date()), uuid,
+//                FileUtil.getSuffix(originFilename));
+//        String uploadPath = String.format("/%s/%s", uploadPathPrefix, uploadFilename);
+//        File file = null;
+//        try {
+//            // 创建临时文件
+//            file = File.createTempFile(uploadPath, null);
+//            // multipartFile.transferTo(file);
+//            HttpUtil.downloadFile(fileUrl, file);
+//            // 上传图片
+//            // 上传图片
+//            PutObjectResult putObjectResult = cosManager.putPictureObject(uploadPath, file);
+//            ImageInfo imageInfo = putObjectResult.getCiUploadResult().getOriginalInfo().getImageInfo();
+//            // 封装返回结果
+//            UploadPictureResult uploadPictureResult = new UploadPictureResult();
+//            int picWidth = imageInfo.getWidth();
+//            int picHeight = imageInfo.getHeight();
+//            double picScale = NumberUtil.round(picWidth * 1.0 / picHeight, 2).doubleValue();
+//            uploadPictureResult.setPicName(FileUtil.mainName(originFilename));
+//            uploadPictureResult.setPicWidth(picWidth);
+//            uploadPictureResult.setPicHeight(picHeight);
+//            uploadPictureResult.setPicScale(picScale);
+//            uploadPictureResult.setPicFormat(imageInfo.getFormat());
+//            uploadPictureResult.setPicSize(FileUtil.size(file));
+//            uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + uploadPath);
+//            return uploadPictureResult;
+//        } catch (Exception e) {
+//            log.error("图片上传到对象存储失败", e);
+//            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "上传失败");
+//        } finally {
+//            this.deleteTempFile(file);
+//        }
+//    }
 
 }

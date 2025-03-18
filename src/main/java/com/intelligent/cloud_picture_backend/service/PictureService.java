@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.intelligent.cloud_picture_backend.model.dto.picture.PictureQueryRequest;
+import com.intelligent.cloud_picture_backend.model.dto.picture.PictureReviewRequest;
 import com.intelligent.cloud_picture_backend.model.dto.picture.PictureUploadRequest;
 import com.intelligent.cloud_picture_backend.model.entity.Picture;
 import com.intelligent.cloud_picture_backend.model.entity.User;
@@ -22,15 +23,12 @@ public interface PictureService extends IService<Picture> {
     /**
      * 上传图片
      *
-     * @param multipartFile
+     * @param inputSource
      * @param pictureUploadRequest
      * @param loginUser
      * @return
      */
-    PictureVO uploadPicture(MultipartFile multipartFile,
-                            PictureUploadRequest pictureUploadRequest,
-                            User loginUser);
-
+    PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser);
 
     PictureVO getPictureVO(Picture picture, HttpServletRequest request);
 
@@ -46,4 +44,13 @@ public interface PictureService extends IService<Picture> {
     QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
 
 
+    /**
+     * 图片审核
+     *
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
+
+    void fillReviewParams(Picture picture, User loginUser);
 }

@@ -91,6 +91,26 @@ public class Picture implements Serializable {
     private Date updateTime;
 
     /**
+     * 审核状态
+     */
+    private Integer reviewStatus;
+
+    /**
+     * 审核信息
+     */
+    private String reviewMessage;
+
+    /**
+     * 审核人ID
+     */
+    private Long reviewerId;
+
+    /**
+     * 审核时间
+     */
+    private Date reviewTime;
+
+    /**
      * 是否删除
      */
     @TableLogic
