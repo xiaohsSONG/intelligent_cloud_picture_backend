@@ -10,6 +10,7 @@ import com.intelligent.cloud_picture_backend.model.dto.picture.PictureUploadRequ
 import com.intelligent.cloud_picture_backend.model.entity.Picture;
 import com.intelligent.cloud_picture_backend.model.entity.User;
 import com.intelligent.cloud_picture_backend.model.vo.PictureVO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,4 +67,7 @@ public interface PictureService extends IService<Picture> {
             PictureUploadByBatchRequest pictureUploadByBatchRequest,
             User loginUser
     );
+
+    @Async
+    void clearPictureFile(Picture oldPicture);
 }
