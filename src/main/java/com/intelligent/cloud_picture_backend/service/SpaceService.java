@@ -1,9 +1,15 @@
 package com.intelligent.cloud_picture_backend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.intelligent.cloud_picture_backend.model.dto.space.SpaceAddRequest;
+import com.intelligent.cloud_picture_backend.model.dto.space.SpaceQueryRequest;
 import com.intelligent.cloud_picture_backend.model.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.intelligent.cloud_picture_backend.model.entity.User;
+import com.intelligent.cloud_picture_backend.model.vo.SpaceVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author hsong
@@ -20,7 +26,17 @@ public interface SpaceService extends IService<Space> {
      */
     long addSpace(SpaceAddRequest spaceAddRequest, User loginUser);
 
+    SpaceVO getSpaceVO(Space space, HttpServletRequest request);
+
+    Page<SpaceVO> getSpaceVOPage(Page<Space> spacePage, HttpServletRequest request);
+
+    QueryWrapper<Space> getQueryWrapper(SpaceQueryRequest spaceQueryRequest);
+
     void validSpace(Space space, boolean add);
 
+    /**
+     * 根据空间级别填充空间大小
+     * @param space
+     */
     void fillSpaceBySpaceLevel(Space space);
 }
