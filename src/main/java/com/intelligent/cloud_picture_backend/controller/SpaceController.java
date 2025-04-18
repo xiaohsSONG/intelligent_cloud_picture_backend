@@ -13,17 +13,17 @@ import com.intelligent.cloud_picture_backend.exception.BusinessException;
 import com.intelligent.cloud_picture_backend.exception.ErrorCode;
 import com.intelligent.cloud_picture_backend.exception.ThrowUtils;
 import com.intelligent.cloud_picture_backend.model.dto.picture.*;
-import com.intelligent.cloud_picture_backend.model.dto.space.SpaceEditRequest;
-import com.intelligent.cloud_picture_backend.model.dto.space.SpaceQueryRequest;
-import com.intelligent.cloud_picture_backend.model.dto.space.SpaceUpdateRequest;
+import com.intelligent.cloud_picture_backend.model.dto.space.*;
 import com.intelligent.cloud_picture_backend.model.entity.Space;
 import com.intelligent.cloud_picture_backend.model.entity.User;
+import com.intelligent.cloud_picture_backend.model.enums.SpaceLevelEnum;
 import com.intelligent.cloud_picture_backend.model.vo.SpaceVO;
 import com.intelligent.cloud_picture_backend.service.SpaceService;
 import com.intelligent.cloud_picture_backend.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/space")
@@ -44,6 +45,14 @@ public class SpaceController {
 
     @Resource
     private SpaceService spaceService;
+
+    @PostMapping("/add")
+    public BaseResponse<Long> addSpace(@RequestBody SpaceAddRequest spaceAddRequest,HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceAddRequest == null,ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        long newId = spaceService.addSpace(spaceAddRequest, loginUser);
+        return ResultUtils.success(newId);
+    }
 
     /**
      * 删除空间
@@ -177,6 +186,18 @@ public class SpaceController {
         boolean result = spaceService.updateById(space);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
+    }
+
+    @GetMapping("/list/level")
+    public BaseResponse<List<SpaceLevel>> listSpaceLevel() {
+        List<SpaceLevel> spaceLevelList = Arrays.stream(SpaceLevelEnum.values()) // 获取所有枚举
+                .map(spaceLevelEnum -> new SpaceLevel(
+                        spaceLevelEnum.getValue(),
+                        spaceLevelEnum.getText(),
+                        spaceLevelEnum.getMaxCount(),
+                        spaceLevelEnum.getMaxSize()))
+                .collect(Collectors.toList());
+        return ResultUtils.success(spaceLevelList);
     }
 
 }

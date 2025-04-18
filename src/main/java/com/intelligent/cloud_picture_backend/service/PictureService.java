@@ -3,10 +3,7 @@ package com.intelligent.cloud_picture_backend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.intelligent.cloud_picture_backend.model.dto.picture.PictureQueryRequest;
-import com.intelligent.cloud_picture_backend.model.dto.picture.PictureReviewRequest;
-import com.intelligent.cloud_picture_backend.model.dto.picture.PictureUploadByBatchRequest;
-import com.intelligent.cloud_picture_backend.model.dto.picture.PictureUploadRequest;
+import com.intelligent.cloud_picture_backend.model.dto.picture.*;
 import com.intelligent.cloud_picture_backend.model.entity.Picture;
 import com.intelligent.cloud_picture_backend.model.entity.User;
 import com.intelligent.cloud_picture_backend.model.vo.PictureVO;
@@ -31,6 +28,10 @@ public interface PictureService extends IService<Picture> {
      * @return
      */
     PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser);
+
+    void deletePicture(long pictureId, User loginUser);
+
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
 
     PictureVO getPictureVO(Picture picture, HttpServletRequest request);
 
@@ -70,4 +71,6 @@ public interface PictureService extends IService<Picture> {
 
     @Async
     void clearPictureFile(Picture oldPicture);
+
+    void checkPictureAuth(User loginUser, Picture picture);
 }
