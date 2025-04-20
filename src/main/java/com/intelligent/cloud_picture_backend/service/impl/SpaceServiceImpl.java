@@ -89,15 +89,15 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     @Override
     public SpaceVO getSpaceVO(Space space, HttpServletRequest request) {
         // 对象转封装类
-        SpaceVO pictureVO = SpaceVO.objToVo(space);
+        SpaceVO spaceVO = SpaceVO.objToVo(space);
         // 关联查询用户信息
         Long userId = space.getUserId();
         if (userId != null && userId > 0) {
             User user = userService.getById(userId);
             UserVO userVO = userService.getUserVO(user);
-            pictureVO.setUser(userVO);
+            spaceVO.setUser(userVO);
         }
-        return pictureVO;
+        return spaceVO;
     }
 
     @Override

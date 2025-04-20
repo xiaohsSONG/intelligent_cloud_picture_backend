@@ -1,6 +1,6 @@
 package com.intelligent.cloud_picture_backend.controller;
 
-import cn.hutool.json.JSONUtil;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -20,6 +20,7 @@ import com.intelligent.cloud_picture_backend.model.enums.SpaceLevelEnum;
 import com.intelligent.cloud_picture_backend.model.vo.SpaceVO;
 import com.intelligent.cloud_picture_backend.service.SpaceService;
 import com.intelligent.cloud_picture_backend.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -36,6 +37,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static cn.hutool.core.lang.Console.log;
+
+@Slf4j
 @RestController
 @RequestMapping("/space")
 public class SpaceController {
