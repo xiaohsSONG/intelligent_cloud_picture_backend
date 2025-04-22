@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author aidishen
@@ -54,6 +55,8 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      */
     void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
+
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
 
     void fillReviewParams(Picture picture, User loginUser);
 
