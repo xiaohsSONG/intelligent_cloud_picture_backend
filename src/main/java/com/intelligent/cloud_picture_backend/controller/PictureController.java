@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.intelligent.cloud_picture_backend.annotation.AuthCheck;
+import com.intelligent.cloud_picture_backend.api.imagesearch.ImageSearchApiFacade;
+import com.intelligent.cloud_picture_backend.api.imagesearch.model.ImageSearchResult;
 import com.intelligent.cloud_picture_backend.common.BaseResponse;
 import com.intelligent.cloud_picture_backend.common.DeleteRequest;
 import com.intelligent.cloud_picture_backend.common.ResultUtils;
@@ -168,8 +170,6 @@ public class PictureController {
         long size = pictureQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        // 普通用户默认只能查看已过审的数据
-        pictureQueryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         // 空间权限校验
         Long spaceId = pictureQueryRequest.getSpaceId();
         // 公开图库
@@ -234,6 +234,22 @@ public class PictureController {
         String fileUrl = pictureUploadRequest.getFileUrl();
         PictureVO pictureVO = pictureService.uploadPicture(fileUrl, pictureUploadRequest, loginUser);
         return ResultUtils.success(pictureVO);
+    }
+
+    /**
+     * 以图搜图
+     */
+    @PostMapping("/search/picture")
+    public BaseResponse<List<ImageSearchResult>> searchPictureByPicture(@RequestBody SearchPictureByPictureRequest searchPictureByPictureRequest) {
+        ThrowUtils.throwIf(searchPictureByPictureRequest == null, ErrorCode.PARAMS_ERROR);
+        Long pictureId = searchPictureByPictureRequest.getPictureId();
+        ThrowUtils.throwIf(pictureId == null || pictureId <= 0, ErrorCode.PARAMS_ERROR);
+        Picture oldPicture = pictureService.getById(pictureId);
+        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
+        String url = oldPicture.getUrl()+"?imageMogr2/format/png";
+//        List resultList = ImageSearchApiFacade.searchImage(url);
+        List<ImageSearchResult> resultList = ImageSearchApiFacade.searchImage(url);
+        return ResultUtils.success(resultList);
     }
 
     @PostMapping("/upload/batch")
