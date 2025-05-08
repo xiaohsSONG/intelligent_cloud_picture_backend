@@ -8,6 +8,7 @@ import com.intelligent.cloud_picture_backend.model.entity.Picture;
 import com.intelligent.cloud_picture_backend.model.entity.User;
 import com.intelligent.cloud_picture_backend.model.vo.PictureVO;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,10 @@ public interface PictureService extends IService<Picture> {
     void deletePicture(long pictureId, User loginUser);
 
     void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
+
+
+    @Transactional(rollbackFor = Exception.class)
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
 
     PictureVO getPictureVO(Picture picture, HttpServletRequest request);
 
